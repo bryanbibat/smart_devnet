@@ -1,4 +1,4 @@
-# Smart Developer Network API [![Build Status](https://secure.travis-ci.org/bridgeutopia/smart_devnet.png)](http://travis-ci.org/bridgeutopia/smart_devnet)
+# Smart Developer Network API 
 
 Ruby wrapper for REST API of SMART Developer Network.
 
@@ -23,16 +23,30 @@ Or install it yourself as:
 
 ## Usage
 
-    SmartDevnet.connect(
-      sp_id: '', 
-      sp_password: '', 
-      nonce:'', 
-      created_at: '', 
-      access_code: '', 
-      sp_service_id: '', 
-      path_to_cert: '')
-    response = SmartDevnet.current.send_sms('mobile_number', "Testing API.")
-    puts response.body, response.code, response.message, response.headers.inspect
+    SmartDevnet.configure do |config|
+      config.sp_id = ''
+      config.sp_password = ''
+      config.nonce = ''
+      config.created_at = ''
+      config.access_code = ''
+      config.sp_service_id = ''
+      config.path_to_cert = ''
+    end
+
+    sms = SmartDevnet.send_sms('+63xxx', 'Testing API.')
+
+    unless sms.error?
+
+      sms.check_status
+      unless sms.error?
+        puts sms.status['+63xxx']
+      else
+        puts sms.error
+      end
+
+    else
+      puts sms.error
+    end
 
 ## Contributing
 
