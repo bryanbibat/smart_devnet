@@ -78,11 +78,23 @@ module SmartDevnet
 
     def process_error(response)
       if response.body.include? "requestError"
-        exception = JSON.parse(response.body)["requestError"]["serviceException"]
-        @error = "#{exception["messageId"]} #{exception["text"]}"
+        error_type = response.body.include?("serviceException") ?
+          "serviceException" : "policyException"
+        exception = JSON.parse(response.body)["requestError"][error_type]
+        @error = "#{exception["messageId"]} #{interpolate(exception["text"], exception["variables"])}"
       else
         @error = "#{response.code} #{response.message}"
       end
+    end
+
+    def interpolate(text, variables)
+      variables = [variables] unless variables.is_a? Array
+      str = ""
+      while text =~ /%(\d+)/
+        str += "#{$`}#{variables[$1.to_i - 1]}"
+        text = $'
+      end
+      str += text
     end
 
   end
