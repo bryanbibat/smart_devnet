@@ -4,16 +4,17 @@ require 'json'
 module SmartDevnet
   class SmsMessage
 
-    attr_accessor :addresses, :message, :request_id
+    attr_accessor :addresses, :message, :request_id, :notify_url
     attr_reader :status, :error
 
-    def initialize(addresses, message)
+    def initialize(addresses, message, notify_url = nil)
       if addresses.is_a? Array
         @addresses = addresses
       else
         @addresses = [addresses]
       end
       @message = message
+      @notify_url = notify_url
 
       send_sms
     end
@@ -28,11 +29,23 @@ module SmartDevnet
 
     private
 
-    def send_sms_body
+    def plain_send_sms_body
       { "outboundSMSMessageRequest" => { 
         "address" => addresses.map { |number| "tel:#{number}" }, 
         "senderAddress" => "#{SmartDevnet.access_code}", 
-        "outboundSMSTextMessage" => {"message" => "#{message}" }}}.to_json
+        "outboundSMSTextMessage" => {"message" => "#{message}" }}}
+    end
+
+    def send_sms_body
+      if notify_url.nil?
+        plain_send_sms_body.to_json
+      else
+        sms_body = plain_send_sms_body
+        sms_body["outboundSMSMessageRequest"].merge!(
+          { "receiptRequest" => { "notifyURL" => notify_url,
+              "notificationFormat" => "XML" }})
+        sms_body.to_json
+      end
     end
 
     def send_sms

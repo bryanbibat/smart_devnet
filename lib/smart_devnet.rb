@@ -24,8 +24,8 @@ module SmartDevnet
       "https://npwifi.smart.com.ph/1/smsmessaging/outbound/#{@access_code}/requests"
     end
 
-    def send_sms(addresses, message)
-      SmartDevnet::SmsMessage.new(addresses, message)
+    def send_sms(addresses, message, notify_url = nil)
+      SmartDevnet::SmsMessage.new(addresses, message, notify_url)
     end
 
     def sms_delivery_status_url(request_id)
