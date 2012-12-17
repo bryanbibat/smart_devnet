@@ -61,7 +61,7 @@ Or install it yourself as:
     end
 
     subs.unsubscribe
-    puts subs2.error if subs2.error?
+    puts subs.error if subs.error?
 
 
     subs2 = SmartDevnet.unsubscribe(subs.subscription_id)
