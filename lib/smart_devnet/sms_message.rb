@@ -13,6 +13,7 @@ module SmartDevnet
       else
         @addresses = [addresses]
       end
+      @message = message
 
       send_sms
     end
