@@ -48,6 +48,11 @@ Or install it yourself as:
       puts sms.error
     end
 
+    
+    sms = SmartDevnet.send_sms('+63xxx', 'Testing API with client notification.', 'http://...')
+
+    puts sms.error if sms.error?
+
 ## Contributing
 
 1. Fork it
