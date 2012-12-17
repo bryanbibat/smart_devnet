@@ -53,7 +53,7 @@ Or install it yourself as:
     puts sms.error if sms.error?
 
 
-    subs = SmartDevnet.subscribe('+639', 'http://,,,')
+    subs = SmartDevnet.subscribe('+639', 'http://...')
     if subs.error?
       puts subs.error
     else
