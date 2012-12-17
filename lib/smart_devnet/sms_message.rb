@@ -56,7 +56,7 @@ module SmartDevnet
 
     def check_delivery_status
       begin
-        response = HTTParty.post(
+        response = HTTParty.get(
           SmartDevnet.sms_delivery_status_url(@request_id), 
           headers: SmartDevnet.headers, 
           ssl_ca_file: SmartDevnet.path_to_cert)

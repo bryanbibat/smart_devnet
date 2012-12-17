@@ -29,9 +29,8 @@ module SmartDevnet
     end
 
     def sms_delivery_status_url(request_id)
-      "#{send_sms_url}/#{request_id}/deliveryInfos"
+      "https://npwifi.smart.com.ph/1/smsmessaging/outbound/requests/#{request_id}/deliveryInfos"
     end
-
 
   end
 end
