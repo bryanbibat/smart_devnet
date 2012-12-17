@@ -1,4 +1,6 @@
+require 'smart_devnet/utils'
 require 'smart_devnet/sms_message'
+require 'smart_devnet/subscription'
 
 module SmartDevnet
 
@@ -32,5 +34,20 @@ module SmartDevnet
       "https://npwifi.smart.com.ph/1/smsmessaging/outbound/requests/#{request_id}/deliveryInfos"
     end
 
+    def subscribe_url
+      "https://npwifi.smart.com.ph/1/smsmessaging/outbound/#{@access_code}/subscriptions"
+    end
+
+    def subscribe(filter_criteria, notify_url, notification_format = "XML")
+      SmartDevnet::Subscription.new(filter_criteria, notify_url, notification_format)
+    end
+
+    def unsubscribe_url(subscription_id)
+      "#{subscribe_url}/#{subscription_id}"
+    end
+
+    def unsubscribe(subscription_id)
+      SmartDevnet::Subscription.new(nil, nil, nil, subscription_id).unsubscribe
+    end
   end
 end

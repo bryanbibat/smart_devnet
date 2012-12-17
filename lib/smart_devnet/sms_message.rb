@@ -59,7 +59,7 @@ module SmartDevnet
         if response.code == 201
           @request_id = JSON.parse(response.body)["resourceReference"]["resourceURL"].split("/").last
         else
-          process_error(response)
+          @error = SmartDevnet::Utils.process_error(response)
         end
       rescue Exception => e
         @error = e.message
@@ -82,7 +82,7 @@ module SmartDevnet
             table
           end
         else
-          process_error(response)
+          @error = SmartDevnet::Utils.process_error(response)
         end
       rescue Exception => e
         @error = e.message
@@ -90,26 +90,6 @@ module SmartDevnet
       nil
     end
 
-    def process_error(response)
-      if response.body.include? "requestError"
-        error_type = response.body.include?("serviceException") ?
-          "serviceException" : "policyException"
-        exception = JSON.parse(response.body)["requestError"][error_type]
-        @error = "#{exception["messageId"]} #{interpolate(exception["text"], exception["variables"])}"
-      else
-        @error = "#{response.code} #{response.message}"
-      end
-    end
-
-    def interpolate(text, variables)
-      variables = [variables] unless variables.is_a? Array
-      str = ""
-      while text =~ /%(\d+)/
-        str += "#{$`}#{variables[$1.to_i - 1]}"
-        text = $'
-      end
-      str += text
-    end
 
   end
 end
